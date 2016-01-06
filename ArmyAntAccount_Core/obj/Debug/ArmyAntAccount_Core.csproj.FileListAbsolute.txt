@@ -1,0 +1,5 @@
+F:\MyGitWorks\ArmyAntAccount_Core\ArmyAntAccount_Core\bin\Debug\ArmyAntAccount_Core.dll
+F:\MyGitWorks\ArmyAntAccount_Core\ArmyAntAccount_Core\bin\Debug\ArmyAntAccount_Core.pdb
+F:\MyGitWorks\ArmyAntAccount_Core\ArmyAntAccount_Core\obj\Debug\ArmyAntAccount_Core.dll
+F:\MyGitWorks\ArmyAntAccount_Core\ArmyAntAccount_Core\obj\Debug\ArmyAntAccount_Core.pdb
+F:\MyGitWorks\ArmyAntAccount_Core\ArmyAntAccount_Core\obj\Debug\ArmyAntAccount_Core.csprojResolveAssemblyReference.cache

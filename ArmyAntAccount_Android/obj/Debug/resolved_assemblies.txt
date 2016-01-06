@@ -1,0 +1,16 @@
+F:\MyGitWorks\ArmyAntAccount_Core\ArmyAntAccount_Android\obj\Debug\assemblies\ArmyAntAccount_Android.dll
+F:\MyGitWorks\ArmyAntAccount_Core\ArmyAntAccount_Android\obj\Debug\assemblies\ArmyAntAccount_Core.dll
+F:\MyGitWorks\ArmyAntAccount_Core\ArmyAntAccount_Android\obj\Debug\assemblies\Mono.Android.dll
+F:\MyGitWorks\ArmyAntAccount_Core\ArmyAntAccount_Android\obj\Debug\assemblies\mscorlib.dll
+F:\MyGitWorks\ArmyAntAccount_Core\ArmyAntAccount_Android\obj\Debug\assemblies\System.Core.dll
+F:\MyGitWorks\ArmyAntAccount_Core\ArmyAntAccount_Android\obj\Debug\assemblies\System.dll
+F:\MyGitWorks\ArmyAntAccount_Core\ArmyAntAccount_Android\obj\Debug\assemblies\System.Runtime.dll
+F:\MyGitWorks\ArmyAntAccount_Core\ArmyAntAccount_Android\obj\Debug\assemblies\System.Xml.dll
+F:\MyGitWorks\ArmyAntAccount_Core\ArmyAntAccount_Android\obj\Debug\assemblies\System.Xml.Linq.dll
+F:\MyGitWorks\ArmyAntAccount_Core\ArmyAntAccount_Android\obj\Debug\assemblies\System.Resources.ResourceManager.dll
+F:\MyGitWorks\ArmyAntAccount_Core\ArmyAntAccount_Android\obj\Debug\assemblies\System.Collections.dll
+F:\MyGitWorks\ArmyAntAccount_Core\ArmyAntAccount_Android\obj\Debug\assemblies\System.IO.dll
+F:\MyGitWorks\ArmyAntAccount_Core\ArmyAntAccount_Android\obj\Debug\assemblies\System.Xml.ReaderWriter.dll
+F:\MyGitWorks\ArmyAntAccount_Core\ArmyAntAccount_Android\obj\Debug\assemblies\System.Xml.XDocument.dll
+F:\MyGitWorks\ArmyAntAccount_Core\ArmyAntAccount_Android\obj\Debug\assemblies\System.Runtime.Extensions.dll
+F:\MyGitWorks\ArmyAntAccount_Core\ArmyAntAccount_Android\obj\Debug\assemblies\System.ComponentModel.Composition.dll
