@@ -62,9 +62,18 @@ namespace ArmyAntAccount
 			list.Clear();
 			while(xml.Read() && xml.MoveToContent() != System.Xml.XmlNodeType.None)
 			{
-				list.Add(new UserData(xml.GetAttribute("uid"), xml.GetAttribute("pwd"), System.Convert.ToByte(xml.GetAttribute("access")), xml.GetAttribute("name")));
-			}
+				switch(xml.Name)
+				{
+					case "userdata":
+						break;
+					case "user":
+						list.Add(new UserData(xml.GetAttribute("uid"), xml.GetAttribute("pwd"), System.Convert.ToByte(xml.GetAttribute("access")), xml.GetAttribute("name")));
+						break;
+					default:
+						throw new System.Xml.XmlException("Xml file format error !");
+				}
 		}
+	}
 		public bool Save()
 		{
 			var xml = new System.Xml.Linq.XDocument();

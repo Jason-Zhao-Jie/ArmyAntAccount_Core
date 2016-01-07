@@ -12,32 +12,58 @@ namespace ArmyAntAccount
 {
 	public partial class MainForm : Form
 	{
-		UserData user = null;
-		AccountData data = null;
-		public MainForm(UserData user)
+		public MainForm()
 		{
-			this.user = user;
-			try
-			{
-				data = new AccountData(new Stream_Win32(), new QCloudOS_Win32());
-			}
-			catch(Exception)
-			{
-				MessageBox.Show("连接云服务器失败,无法读取数据,请检查你的网络连接!");
-				DialogResult = DialogResult.Cancel;
-				Close();
-			}
 			InitializeComponent();
 		}
 
 		~MainForm()
 		{
-			data.Save();
 		}
 
 		private void MainForm_Load(object sender, EventArgs e)
 		{
+			listview.BeginUpdate();
+			for(int i = 0; i < Program.data.Data.Length; i++)
+			{
+				AddData(Program.data.Data[i]);
+			}
+			listview.EndUpdate();
+			if(listview.Items.Count > 0)
+				listview.Items[0].EnsureVisible();
+		}
 
+		private void AddData(AccountItem item)
+		{
+			listview.Items.Insert(0, new ListViewItem(new[] { item.datetime.ToShortDateString(), item.datetime.ToShortTimeString(), item.type, item.change.ToString(), item.person, item.tag, item.comment, item.otherRemark }));
+		}
+
+		private void logout_menuItem_Click(object sender, EventArgs e)
+		{
+			DialogResult = DialogResult.OK;
+			Close();
+		}
+
+		private void exit_menuItem_Click(object sender, EventArgs e)
+		{
+			DialogResult = DialogResult.Cancel;
+			Close();
+		}
+
+		private void add_menuItem_Click(object sender, EventArgs e)
+		{
+			DataEdit editor = new DataEdit();
+			if(editor.ShowDialog(this, null, true) == DialogResult.OK)
+			{
+				Program.data.InsertRecord(editor.Data);
+				AddData(editor.Data);
+				//listview.Sort();
+			}
+		}
+
+		private void listview_ItemActivate(object sender, EventArgs e)
+		{
+			new DataEdit().ShowDialog(this, Program.data.Data[listview.SelectedItems[0].Index]);
 		}
 	}
 }

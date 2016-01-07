@@ -13,3 +13,4 @@ F:\MyGitWorks\ArmyAntAccount_Core\ArmyAntAccount_Win32\obj\Debug\ArmyAntAccount_
 F:\MyGitWorks\ArmyAntAccount_Core\ArmyAntAccount_Win32\bin\Debug\Newtonsoft.Json.dll
 F:\MyGitWorks\ArmyAntAccount_Core\ArmyAntAccount_Win32\bin\Debug\Newtonsoft.Json.pdb
 F:\MyGitWorks\ArmyAntAccount_Core\ArmyAntAccount_Win32\bin\Debug\Newtonsoft.Json.xml
+F:\MyGitWorks\ArmyAntAccount_Core\ArmyAntAccount_Win32\obj\Debug\ArmyAntAccount.DataEdit.resources

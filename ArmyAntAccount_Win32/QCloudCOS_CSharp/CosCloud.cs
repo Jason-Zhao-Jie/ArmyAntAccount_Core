@@ -292,6 +292,9 @@ namespace QCloud.CosApi.Api
 			}
 			if(!File.Exists(localPath))
 				File.Create(localPath);
+			var tmp = File.Open(localPath, FileMode.Create);
+			tmp.SetLength(0);
+			tmp.Close();
 			File.Replace(localPath + ".qcloud.t.t.temp", localPath, localPath + ".qcloud.t.old.temp");
 			File.Delete(localPath + ".qcloud.t.old.temp");
 			return true;

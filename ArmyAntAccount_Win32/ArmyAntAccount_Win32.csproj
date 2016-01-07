@@ -51,6 +51,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DataEdit.Designer.cs">
+      <DependentUpon>DataEdit.cs</DependentUpon>
+    </Compile>
     <Compile Include="QCloudOS_Win32.cs" />
     <Compile Include="Login.cs">
       <SubType>Form</SubType>
@@ -72,6 +78,9 @@
     <Compile Include="QCloudCOS_CSharp\SHA1.cs" />
     <Compile Include="QCloudCOS_CSharp\Sign.cs" />
     <Compile Include="Stream_Win32.cs" />
+    <EmbeddedResource Include="DataEdit.resx">
+      <DependentUpon>DataEdit.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
     </EmbeddedResource>

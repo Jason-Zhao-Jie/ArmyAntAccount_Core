@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace ArmyAntAccount
 {
-	class ConfigSync
+	public class ConfigSync
 	{
 		private static ConfigSync instance = null;
-		internal static AQCloudOS cloud = null;
-		internal static IStream file = null;
+		public static AQCloudOS cloud = null;
+		public static IStream file = null;
 
 		public static ConfigSync Instance
 		{
@@ -71,14 +71,10 @@ namespace ArmyAntAccount
 				file.Write(initDataAccount);
 			}
 			file.Close();
-			if(!SyncFromCloud())
-				throw new Exception("Download failed");
 		}
 
 		~ConfigSync()
 		{
-			if(!SyncToCloud())
-				throw new Exception("Upload failed");
 		}
 
 		public string FileUserAccount
@@ -115,17 +111,22 @@ namespace ArmyAntAccount
 
 		public bool SyncToCloud()
 		{
-			var ret = cloud.Upload(file_user_account, file.GetPath(file_user_account));
+			bool ret = true;
+			if(cloud.IsFileExist(file_user_account))
+				ret = ret && cloud.DeleteFile(file_user_account);
+			if(cloud.IsFileExist(file_main_data))
+				ret = ret && cloud.DeleteFile(file_main_data);
+			ret = cloud.Upload(file_user_account, file.GetPath(file_user_account));
 			ret = ret && cloud.Upload(file_main_data, file.GetPath(file_main_data));
-			return true;
+			return ret;
 		}
 
 		private const string initMainConfig = "<?xml version=\"1.0\" encoding=\"utf-8\" ?> <appdata><qcloud appId=\"10016653\" secretId=\"AKIDgasH8laSoVtQS6o8iOXekR7uFllGfn9W\" secretKey=\"kiwoKfFfFTmhXmQV65sI3HFrnlbTrYGZ\" bucket=\"default\" /><config_files user_account=\"account_user.xml\" main_data=\"account_data.xml\" /></appdata>";
 		private const string initUserAccount = "<?xml version=\"1.0\" encoding=\"utf-8\" ?> <userdata><user uid=\"zhaojie\" pwd=\"zjljcy\" access=\"5\" name=\"赵杰\"/></userdata>";
 		private const string initDataAccount = "<?xml version=\"1.0\" encoding=\"utf-8\" ?> <data></data>";
 
-		private string file_main_config = "ArmyAntAccount.config.xml";
-		private string file_user_account = null;
-		private string file_main_data = null;
+		private const string file_main_config = "ArmyAntAccount.config.xml";
+		private static string file_user_account = null;
+		private static string file_main_data = null;
 	}
 }

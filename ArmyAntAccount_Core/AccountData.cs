@@ -36,16 +36,25 @@ namespace ArmyAntAccount
 			data.Clear();
 			while(xml.Read() && xml.MoveToContent() != System.Xml.XmlNodeType.None)
 			{
-				data.Add(new AccountItem
+				switch(xml.Name)
 				{
-					datetime = System.Convert.ToDateTime(xml.GetAttribute("datetime")),
-					type = xml.GetAttribute("type"),
-					change = System.Convert.ToInt32(xml.GetAttribute("change")),
-					tag = xml.GetAttribute("tag"),
-					person = xml.GetAttribute("person"),
-					comment = xml.GetAttribute("comment"),
-					otherRemark = xml.GetAttribute("otherRemark")
-				});
+					case "data":
+						break;
+					case "record":
+						data.Add(new AccountItem
+						{
+							datetime = System.Convert.ToDateTime(xml.GetAttribute("datetime")),
+							type = xml.GetAttribute("type"),
+							change = System.Convert.ToInt32(xml.GetAttribute("change")),
+							tag = xml.GetAttribute("tag"),
+							person = xml.GetAttribute("person"),
+							comment = xml.GetAttribute("comment"),
+							otherRemark = xml.GetAttribute("otherRemark")
+						});
+						break;
+					default:
+						throw new System.Xml.XmlException("Xml file format error !");
+				}
 			}
 		}
 		public bool Save()

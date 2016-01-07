@@ -32,7 +32,7 @@ namespace ArmyAntAccount
 				throw new MemberAccessException("Please create before use cloud");
 			var ret = cos.CreateFolder(bucket_name, parentdir + name);
 			var obj = ParseJson(ret);
-			return obj["code"].ToString() == "0";
+			return Convert.ToInt32(obj["code"]) == 0;
 		}
 
 		public override bool DeleteDirectory(string dir)
@@ -41,7 +41,14 @@ namespace ArmyAntAccount
 				throw new MemberAccessException("Please create before use cloud");
 			var ret = cos.DeleteFolder(bucket_name, dir);
 			var obj = ParseJson(ret);
-			return obj["code"].ToString() == "0";
+			var res = (Convert.ToInt32(obj["code"]) == 0);
+			if(res)
+			{
+				var tmp = folders.ToList();
+				tmp.Remove(dir);
+				folders = tmp.ToArray();
+			}
+			return res;
 		}
 
 		public override bool DeleteFile(string path)
@@ -50,7 +57,14 @@ namespace ArmyAntAccount
 				throw new MemberAccessException("Please create before use cloud");
 			var ret = cos.DeleteFile(bucket_name, path);
 			var obj = ParseJson(ret);
-			return obj["code"].ToString() == "0";
+			var res = (Convert.ToInt32(obj["code"]) == 0);
+			if(res)
+			{
+				var tmp = files.ToList();
+				tmp.Remove(path);
+				files = tmp.ToArray();
+			}
+			return res;
 		}
 
 		public override bool Download(string netpath, string localpath)
@@ -80,7 +94,14 @@ namespace ArmyAntAccount
 				throw new MemberAccessException("Please create before use cloud");
 			var ret = cos.UploadFile(bucket_name, netpath, localpath);
 			var obj = ParseJson(ret);
-			return obj["code"].ToString() == "0";
+			var res = (Convert.ToInt32(obj["code"]) == 0);
+			if(res)
+			{
+				var tmp = files.ToList();
+				tmp.Add(netpath);
+				files = tmp.ToArray();
+			}
+			return res;
 		}
 
 		public static Dictionary<string, object> ParseJson(string json)
