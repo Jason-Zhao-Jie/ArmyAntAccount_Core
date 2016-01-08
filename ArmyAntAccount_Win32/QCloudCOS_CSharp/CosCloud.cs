@@ -280,8 +280,8 @@ namespace QCloud.CosApi.Api
 					intSize = myStream.Read(btContent, 0, 512);
 				}
 				//关闭流
-				stream.Close();
 				myStream.Close();
+				stream.Close();
 			}
 			catch(Exception)
 			{
@@ -291,7 +291,7 @@ namespace QCloud.CosApi.Api
 				return false;       //返回false下载失败
 			}
 			if(!File.Exists(localPath))
-				File.Create(localPath);
+				File.Create(localPath).Close();
 			var tmp = File.Open(localPath, FileMode.Create);
 			tmp.SetLength(0);
 			tmp.Close();

@@ -41,6 +41,7 @@
     <Compile Include="ConfigSync.cs" />
     <Compile Include="IQCloudOS.cs" />
     <Compile Include="IStream.cs" />
+    <Compile Include="Core.cs" />
     <Compile Include="UserChecker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

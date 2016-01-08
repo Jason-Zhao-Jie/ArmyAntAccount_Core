@@ -42,21 +42,19 @@ namespace ArmyAntAccount
 	public class UserChecker
 	{
 		private List<UserData> list = new List<UserData>();
-		public UserChecker(IStream file, AQCloudOS cloud)
+		internal UserChecker()
 		{
-			ConfigSync.file = file;
-			ConfigSync.cloud = cloud;
-			bool isopened = file.IsOpened;
-			if(!isopened && !file.Open(ConfigSync.Instance.FileUserAccount))
+			bool isopened = Core.File.IsOpened;
+			if(!isopened && !Core.File.Open(Core.Config.FileUserAccount))
 				throw new System.IO.FileNotFoundException("The stream is null");
-			string xmls = file.Read();
+			string xmls = Core.File.Read();
 			if(!isopened)
-				file.Close();
+				Core.File.Close();
 			if(xmls == null)
 				throw new System.ArgumentException("The stream cannot read");
 			if(xmls == "")
 				throw new System.IO.EndOfStreamException("The stream was empty");
-			xmls = xmls.Replace(""+(char)65279, "");
+			xmls = xmls.Replace("" + (char)65279, "");
 			System.IO.StringReader reader = new System.IO.StringReader(xmls);
 			var xml = System.Xml.XmlReader.Create(reader);
 			list.Clear();
@@ -72,9 +70,9 @@ namespace ArmyAntAccount
 					default:
 						throw new System.Xml.XmlException("Xml file format error !");
 				}
+			}
 		}
-	}
-		public bool Save()
+		internal bool Save()
 		{
 			var xml = new System.Xml.Linq.XDocument();
 			xml.AddFirst(new System.Xml.Linq.XElement("userdata"));
@@ -96,12 +94,13 @@ namespace ArmyAntAccount
 				elems.SetAttributeValue("name", i.Current.name);
 				elems = (System.Xml.Linq.XElement)(elems.NextNode);
 			}
-			bool isopened = ConfigSync.file.IsOpened;
-			if(!isopened && !ConfigSync.file.Open(ConfigSync.Instance.FileUserAccount))
+			bool isopened = Core.File.IsOpened;
+			if(!isopened && !Core.File.Open(Core.Config.FileUserAccount))
 				throw new System.IO.FileNotFoundException("The stream is null");
-			bool ret = ConfigSync.file.Write(xml.ToString());
+			bool ret = Core.File.Write(ConfigSync.xmlDocumentDef);
+			ret = ret && Core.File.Write(xml.ToString());
 			if(!isopened)
-				ConfigSync.file.Close();
+				Core.File.Close();
 			return ret;
 		}
 
@@ -137,5 +136,23 @@ namespace ArmyAntAccount
 		{
 			return null == list.Find((UserData data) => data == uid);
 		}
-    }
+
+		internal UserData[] Data
+		{
+			get
+			{
+				return list.ToArray();
+			}
+		}
+
+		public bool Mix(UserChecker checker)
+		{
+			for(int i = 0; i < checker.list.Count; i++)
+			{
+				if(!CheckExist(checker.list[i].uid))
+					list.Add(checker.list[i]);
+			}
+			return true;
+		}
+	}
 }

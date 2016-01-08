@@ -6,22 +6,32 @@ namespace ArmyAntAccount
 	[Activity(Label = "账务管理系统", MainLauncher = true, Icon = "@drawable/icon")]
 	public class LoginActivity : Activity
 	{
-		UserChecker userdata = null;
-		public UserData user = null;
+		public static UserData user = null;
+		LoginActivity() : base()
+		{
+			Stream_Android.Path = ApplicationContext.FilesDir.Path + "/";
+			try
+			{
+				Core.Init(new Stream_Android(), new QCloudCOS_Android());
+			}
+			catch(System.Exception e)
+			{
+				MessageBox(this, "数据错误", "读取本地数据失败!\n错误信息:" + e.Message);
+				Finish();
+			}
+			if(!Core.Download(Core.IOType.Users))
+			{
+				MessageBox(this, "数据错误", "从云读取账户信息失败!");
+				Finish();
+			}
+		}
 		protected override void OnDestroy()
 		{
-			var file = new Stream_Android();
-			userdata.Save();
 			base.OnDestroy();
 		}
 		protected override void OnCreate(Android.OS.Bundle bundle)
 		{
 			base.OnCreate(bundle);
-			Stream_Android.Path = ApplicationContext.FilesDir.Path + "/";
-
-			var file = new Stream_Android();
-			userdata = new UserChecker(file);
-			Android.Util.Log.Warn("ZJ", "Open and read another library");
 
 			// Set our view from the "main" layout resource
 			SetContentView(Resource.Layout.Login);
@@ -36,7 +46,7 @@ namespace ArmyAntAccount
 			{
 				TextView uid = FindViewById<TextView>(Resource.Id.uidText);
 				TextView pwd = FindViewById<TextView>(Resource.Id.pwdText);
-				user = userdata.Check(uid.Text, pwd.Text);
+				user = Core.Users.Check(uid.Text, pwd.Text);
 				if(null == user)
 				{
 					MessageBox(this, "登录失败", "用户名或密码错误");

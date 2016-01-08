@@ -30,7 +30,7 @@ namespace QCloud.CosApi.Common
             catch (Exception ex)
             {
                 throw ex;
-            }
+			}
             return strResult;
         }
     }

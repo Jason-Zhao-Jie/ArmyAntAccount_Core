@@ -8,35 +8,20 @@ namespace ArmyAntAccount
 {
 	public class ConfigSync
 	{
-		private static ConfigSync instance = null;
-		public static AQCloudOS cloud = null;
-		public static IStream file = null;
-
-		public static ConfigSync Instance
-		{
-			get
-			{
-				if(cloud == null || file == null)
-					throw new MissingMemberException("Cloud or filestream object is null");
-				if(instance == null)
-					instance = new ConfigSync(file, cloud);
-				return instance;
-			}
-		}
-		private ConfigSync(IStream file, AQCloudOS cloud)
+		internal ConfigSync()
 		{
 			string xml = null;
-			if(!file.Open(file_main_config))
+			if(!Core.File.Open(file_main_config))
 			{
-				file.Create(file_main_config);
+				Core.File.Create(file_main_config);
 				xml = initMainConfig;
-				file.Write(xml);
+				Core.File.Write(xml);
 			}
 			else
 			{
-				xml = file.Read();
+				xml = Core.File.Read();
 			}
-			file.Close();
+			Core.File.Close();
 
 			System.IO.StringReader reader = new System.IO.StringReader(xml);
 			var xmlreader = System.Xml.XmlReader.Create(reader);
@@ -45,11 +30,11 @@ namespace ArmyAntAccount
 				switch(xmlreader.Name)
 				{
 					case "qcloud":
-						cloud.app_id = Convert.ToInt32(xmlreader.GetAttribute("appId"));
-						cloud.secret_id = xmlreader.GetAttribute("secretId");
-						cloud.secret_key = xmlreader.GetAttribute("secretKey");
-						cloud.bucket_name = xmlreader.GetAttribute("bucket");
-						cloud.Create();
+						Core.Cloud.app_id = Convert.ToInt32(xmlreader.GetAttribute("appId"));
+						Core.Cloud.secret_id = xmlreader.GetAttribute("secretId");
+						Core.Cloud.secret_key = xmlreader.GetAttribute("secretKey");
+						Core.Cloud.bucket_name = xmlreader.GetAttribute("bucket");
+						Core.Cloud.Create();
 						break;
 					case "config_files":
 						file_user_account = xmlreader.GetAttribute("user_account");
@@ -59,18 +44,18 @@ namespace ArmyAntAccount
 			}
 
 			//接下来检查本地文件,没有则建立初始值文件
-			if(!file.Open(file_user_account))
+			if(!Core.File.Open(file_user_account))
 			{
-				file.Create(file_user_account);
-				file.Write(initUserAccount);
+				Core.File.Create(file_user_account);
+				Core.File.Write(initUserAccount);
 			}
-			file.Close();
-			if(!file.Open(file_main_data))
+			Core.File.Close();
+			if(!Core.File.Open(file_main_data))
 			{
-				file.Create(file_main_data);
-				file.Write(initDataAccount);
+				Core.File.Create(file_main_data);
+				Core.File.Write(initDataAccount);
 			}
-			file.Close();
+			Core.File.Close();
 		}
 
 		~ConfigSync()
@@ -93,40 +78,78 @@ namespace ArmyAntAccount
 			}
 		}
 
-		public bool SyncFromCloud()
+		internal bool SyncFromCloud(Core.IOType type = Core.IOType.All)
 		{
 			bool ret = true;
 			//先判断服务器上是否有文件服务器上无文件则上传本地副本
-			if(cloud.IsFileExist(file_user_account))
-				ret = ret && cloud.Download(file_user_account, file.GetPath(file_user_account));
-			else
-				ret = ret && cloud.Upload(file_user_account, file.GetPath(file_user_account));
-			if(cloud.IsFileExist(file_main_data))
-				ret = ret && cloud.Download(file_main_data, file.GetPath(file_main_data));
-			else
-				ret = ret && cloud.Upload(file_main_data, file.GetPath(file_main_data));
+			if(type == Core.IOType.All || type == Core.IOType.Users)
+				if(Core.Cloud.IsFileExist(file_user_account))
+					ret = ret && Core.Cloud.Download(file_user_account, Core.File.GetPath(file_user_account));
+				else
+					ret = ret && Core.Cloud.Upload(file_user_account, Core.File.GetPath(file_user_account));
+			if(type == Core.IOType.All || type == Core.IOType.Data)
+				if(Core.Cloud.IsFileExist(file_main_data))
+					ret = ret && Core.Cloud.Download(file_main_data, Core.File.GetPath(file_main_data));
+				else
+					ret = ret && Core.Cloud.Upload(file_main_data, Core.File.GetPath(file_main_data));
 
 			return ret;
 		}
 
-		public bool SyncToCloud()
+		internal bool SyncToCloud(Core.IOType type = Core.IOType.All)
 		{
 			bool ret = true;
-			if(cloud.IsFileExist(file_user_account))
-				ret = ret && cloud.DeleteFile(file_user_account);
-			if(cloud.IsFileExist(file_main_data))
-				ret = ret && cloud.DeleteFile(file_main_data);
-			ret = cloud.Upload(file_user_account, file.GetPath(file_user_account));
-			ret = ret && cloud.Upload(file_main_data, file.GetPath(file_main_data));
+			if(type == Core.IOType.All || type == Core.IOType.Users)
+			{
+				if(Core.Cloud.IsFileExist(file_user_account))
+					ret = ret && Core.Cloud.DeleteFile(file_user_account);
+				ret = Core.Cloud.Upload(file_user_account, Core.File.GetPath(file_user_account));
+			}
+			if(type == Core.IOType.All || type == Core.IOType.Data)
+			{
+				if(Core.Cloud.IsFileExist(file_main_data))
+					ret = ret && Core.Cloud.DeleteFile(file_main_data);
+				ret = ret && Core.Cloud.Upload(file_main_data, Core.File.GetPath(file_main_data));
+			}
 			return ret;
 		}
 
-		private const string initMainConfig = "<?xml version=\"1.0\" encoding=\"utf-8\" ?> <appdata><qcloud appId=\"10016653\" secretId=\"AKIDgasH8laSoVtQS6o8iOXekR7uFllGfn9W\" secretKey=\"kiwoKfFfFTmhXmQV65sI3HFrnlbTrYGZ\" bucket=\"default\" /><config_files user_account=\"account_user.xml\" main_data=\"account_data.xml\" /></appdata>";
-		private const string initUserAccount = "<?xml version=\"1.0\" encoding=\"utf-8\" ?> <userdata><user uid=\"zhaojie\" pwd=\"zjljcy\" access=\"5\" name=\"赵杰\"/></userdata>";
-		private const string initDataAccount = "<?xml version=\"1.0\" encoding=\"utf-8\" ?> <data></data>";
+		internal bool Sync(Core.IOType type = Core.IOType.All)
+		{
+			bool ret = true;
+			if(type == Core.IOType.All || type == Core.IOType.Users)
+			{
+				if(Core.Cloud.IsFileExist(file_user_account))
+				{
+					var cmp = new UserChecker();
+					if(!Core.Cloud.Download(file_user_account, Core.File.GetPath(file_user_account)))
+						return false;
+					cmp.Mix(new UserChecker());
+					cmp.Save();
+				}
+			}
+			if(type == Core.IOType.All || type == Core.IOType.Data)
+			{
+				if(Core.Cloud.IsFileExist(file_main_data))
+				{
+					var cmp = new AccountData();
+					if(!Core.Cloud.Download(file_user_account, Core.File.GetPath(file_user_account)))
+						return false;
+					cmp.Mix(new AccountData());
+					cmp.Save();
+				}
+			}
+
+			return ret && SyncToCloud(type);
+		}
+
+		internal const string xmlDocumentDef = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\r\n";
+		private const string initMainConfig = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\r\n<appdata>\r\n\t<qcloud appId=\"10016653\" secretId=\"AKIDgasH8laSoVtQS6o8iOXekR7uFllGfn9W\" secretKey=\"kiwoKfFfFTmhXmQV65sI3HFrnlbTrYGZ\" bucket=\"default\" />\r\n\t<config_files user_account=\"account_user.xml\" main_data=\"account_data.xml\" />\r\n</appdata>";
+		private const string initUserAccount = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\r\n<userdata>\r\n\t<user uid=\"zhaojie\" pwd=\"zjljcy\" access=\"5\" name=\"赵杰\"/>\r\n</userdata>";
+		private const string initDataAccount = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\r\n<data>\r\n</data>";
 
 		private const string file_main_config = "ArmyAntAccount.config.xml";
-		private static string file_user_account = null;
-		private static string file_main_data = null;
+		private string file_user_account = null;
+		private string file_main_data = null;
 	}
 }

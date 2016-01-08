@@ -1,1 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?> <userdata><user uid="zhaojie" pwd="zjljcy" access="5" name="赵杰"/></userdata>
+<?xml version="1.0" encoding="utf-8" ?>
+<userdata>
+  <user uid="zhaojie" pwd="zjljcy" access="5" name="赵杰" />
+</userdata>

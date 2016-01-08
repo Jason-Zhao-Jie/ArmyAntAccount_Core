@@ -15,16 +15,14 @@ namespace ArmyAntAccount
 	public class AccountData
 	{
 		private List<AccountItem> data = new List<AccountItem>();
-		public AccountData(IStream file, AQCloudOS cloud)
+		internal AccountData()
 		{
-			ConfigSync.file = file;
-			ConfigSync.cloud = cloud;
-			bool isopened = file.IsOpened;
-			if(!isopened && !file.Open(ConfigSync.Instance.FileMainData))
+			bool isopened = Core.File.IsOpened;
+			if(!isopened && !Core.File.Open(Core.Config.FileMainData))
 				throw new System.IO.FileNotFoundException("The stream is null");
-			string xmls = file.Read();
+			string xmls = Core.File.Read();
 			if(!isopened)
-				file.Close();
+				Core.File.Close();
 			if(xmls == null)
 				throw new System.ArgumentException("The stream cannot read");
 			if(xmls == "")
@@ -57,7 +55,7 @@ namespace ArmyAntAccount
 				}
 			}
 		}
-		public bool Save()
+		internal bool Save()
 		{
 			var xml = new System.Xml.Linq.XDocument();
 			xml.AddFirst(new System.Xml.Linq.XElement("data"));
@@ -82,12 +80,13 @@ namespace ArmyAntAccount
 				elems.SetAttributeValue("otherRemark", i.Current.otherRemark);
 				elems = (System.Xml.Linq.XElement)(elems.NextNode);
 			}
-			bool isopened = ConfigSync.file.IsOpened;
-			if(!isopened && !ConfigSync.file.Open(ConfigSync.Instance.FileMainData))
+			bool isopened = Core.File.IsOpened;
+			if(!isopened && !Core.File.Open(Core.Config.FileMainData))
 				throw new System.IO.FileNotFoundException("The stream is null");
-			bool ret = ConfigSync.file.Write(xml.ToString());
+			bool ret = Core.File.Write(ConfigSync.xmlDocumentDef);
+			ret = ret && Core.File.Write(xml.ToString());
 			if(!isopened)
-				ConfigSync.file.Close();
+				Core.File.Close();
 			return ret;
 		}
 		public bool InsertRecord(AccountItem item)
@@ -97,11 +96,14 @@ namespace ArmyAntAccount
 		}
 		public bool RemoveRecord(System.DateTime time)
 		{
-			foreach(var i in data)
-			{
-				if(i.datetime == time)
-					data.Remove(i);
-			}
+			var ret = Find(time);
+			if(ret != null)
+				data.Remove(ret);
+			return true;
+		}
+		public bool RemoveRecord(int index)
+		{
+			data.RemoveAt(index);
 			return true;
 		}
 		public AccountItem[] Data
@@ -110,6 +112,26 @@ namespace ArmyAntAccount
 			{
 				return data.ToArray();
 			}
+		}
+
+		private AccountItem Find(System.DateTime time)
+		{
+			foreach(var i in data)
+			{
+				if(i.datetime == time)
+					return i;
+			}
+			return null;
+		}
+
+		internal bool Mix(AccountData data)
+		{
+			for(int i = 0; i < data.data.Count; i++)
+			{
+				if(Find(data.data[i].datetime) == null)
+					this.data.Add(data.data[i]);
+			}
+			return true;
 		}
 	}
 }

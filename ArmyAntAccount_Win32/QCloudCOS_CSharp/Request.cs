@@ -19,7 +19,7 @@ namespace QCloud.CosApi.Common
         {
             try
             {
-                System.Net.ServicePointManager.Expect100Continue = false;
+                ServicePointManager.Expect100Continue = false;
                 if (requestMethod == HttpMethod.Get)
                 {
                     var paramStr = "";
@@ -31,7 +31,7 @@ namespace QCloud.CosApi.Common
                     url += (url.EndsWith("?") ? "&" : "?") + paramStr;
                 }
 
-                request = (HttpWebRequest)HttpWebRequest.Create(url);
+                request = (HttpWebRequest)WebRequest.Create(url);
                 request.Accept = "*/*";
                 request.KeepAlive = true;
                 request.UserAgent = "qcloud-dotnet-sdk";
@@ -78,7 +78,7 @@ namespace QCloud.CosApi.Common
                         {
                             memStream.Write(beginBoundary, 0, beginBoundary.Length);
                             var fileInfo = new FileInfo(localPath);
-                            var fileStream = new FileStream(localPath, FileMode.Open, FileAccess.Read);
+                            var fileStream = new FileStream(localPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
                             const string filePartHeader =
                                 "Content-Disposition: form-data; name=\"fileContent\"; filename=\"{0}\"\r\n" +
@@ -104,6 +104,7 @@ namespace QCloud.CosApi.Common
                                 bytesRead = fileStream.Read(buffer, 0, buffer.Length);
                                 memStream.Write(buffer, 0, bytesRead);
                             }
+							fileStream.Close();
                         }
                         memStream.Write(endBoundary, 0, endBoundary.Length);
                     }

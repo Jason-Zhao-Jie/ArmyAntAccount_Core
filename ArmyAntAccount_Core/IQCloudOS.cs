@@ -41,6 +41,38 @@ namespace ArmyAntAccount
 		public abstract bool IsDirectoryExist(string dir);
 		public abstract bool IsFileExist(string netpath);
 
+		public int APP_ID
+		{
+			get
+			{
+				return app_id;
+			}
+		}
+
+		public string Secret_ID
+		{
+			get
+			{
+				return secret_id;
+			}
+		}
+
+		public string Secret_Key
+		{
+			get
+			{
+				return secret_key;
+			}
+		}
+
+		public string Bucket_Name
+		{
+			get
+			{
+				return bucket_name;
+			}
+		}
+
 		protected internal int app_id;
 		protected internal string secret_id = "";
 		protected internal string secret_key = "";
