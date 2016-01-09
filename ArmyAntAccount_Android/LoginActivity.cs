@@ -7,24 +7,6 @@ namespace ArmyAntAccount
 	public class LoginActivity : Activity
 	{
 		public static UserData user = null;
-		LoginActivity() : base()
-		{
-			Stream_Android.Path = ApplicationContext.FilesDir.Path + "/";
-			try
-			{
-				Core.Init(new Stream_Android(), new QCloudCOS_Android());
-			}
-			catch(System.Exception e)
-			{
-				MessageBox(this, "数据错误", "读取本地数据失败!\n错误信息:" + e.Message);
-				Finish();
-			}
-			if(!Core.Download(Core.IOType.Users))
-			{
-				MessageBox(this, "数据错误", "从云读取账户信息失败!");
-				Finish();
-			}
-		}
 		protected override void OnDestroy()
 		{
 			base.OnDestroy();
@@ -62,6 +44,63 @@ namespace ArmyAntAccount
 					Finish();
 				}
 			};
+			FindViewById<TextView>(Resource.Id.uidText).Text = "zhaojie";
+			FindViewById<TextView>(Resource.Id.pwdText).Text = "zjljcy";
+
+			if(!Core.Inited)
+			{
+				Stream_Android.Path = ApplicationContext.FilesDir.Path + "/";
+				var loadingdlg = new AlertDialog.Builder(this).Create();
+				loadingdlg.SetCancelable(false);
+				loadingdlg.SetTitle("请稍后");
+				loadingdlg.SetMessage("正在同步账户信息");
+				loadingdlg.Show();
+				new Java.Lang.Thread(() =>
+				{
+					Log("In thread");
+					Stream_Android.Path = ApplicationContext.FilesDir.Path + "/";
+					try
+					{
+						Core.Init(new Stream_Android(), new QCloudOS_Android());
+					}
+					catch(System.Exception)
+					{
+						RunOnUiThread(() =>
+						{
+							loadingdlg.Dismiss();
+							loadingdlg = new AlertDialog.Builder(this).Create();
+							loadingdlg.SetTitle("数据错误");
+							loadingdlg.SetMessage("读取本地数据失败!\n错误信息:");
+							loadingdlg.SetButton("OK", (object sender, Android.Content.DialogClickEventArgs e) =>
+							{
+								Finish();
+							});
+						});
+						return;
+					}
+					if(!Core.Download(Core.IOType.All))
+					{
+						RunOnUiThread(() =>
+						{
+							loadingdlg.Dismiss();
+							loadingdlg = new AlertDialog.Builder(this).Create();
+							loadingdlg.SetTitle("数据错误");
+							loadingdlg.SetMessage("从云读取账户信息失败!");
+							loadingdlg.SetButton("OK", (object sender, Android.Content.DialogClickEventArgs e) =>
+							{
+								Finish();
+							});
+						});
+						return;
+					}
+					Log("Before update thread");
+					RunOnUiThread(() =>
+					{
+						loadingdlg.Dismiss();
+					});
+					Log("After update thread");
+				}).Start();
+			}
 		}
 
 		public static void MessageBox(Activity act, string title, string text)
@@ -71,6 +110,11 @@ namespace ArmyAntAccount
 			ad.SetMessage(text);
 			ad.SetButton("OK", (object sender, Android.Content.DialogClickEventArgs e) => { });
 			ad.Show();
+		}
+
+		public static void Log(string mess)
+		{
+			Android.Util.Log.Debug("ZJ", mess);
 		}
 	}
 }

@@ -14,16 +14,23 @@ public final class R {
         public static final int icon=0x7f020000;
     }
     public static final class id {
-        public static final int exitBtn=0x7f050005;
-        public static final int loginBtn=0x7f050004;
-        public static final int pwdLabel=0x7f050002;
-        public static final int pwdText=0x7f050003;
-        public static final int uidLabel=0x7f050000;
-        public static final int uidText=0x7f050001;
+        public static final int change=0x7f050003;
+        public static final int datetime=0x7f050000;
+        public static final int exitBtn=0x7f05000a;
+        public static final int loginBtn=0x7f050009;
+        public static final int lv=0x7f05000b;
+        public static final int person=0x7f050002;
+        public static final int pwdLabel=0x7f050007;
+        public static final int pwdText=0x7f050008;
+        public static final int tag=0x7f050004;
+        public static final int type=0x7f050001;
+        public static final int uidLabel=0x7f050005;
+        public static final int uidText=0x7f050006;
     }
     public static final class layout {
-        public static final int login=0x7f030000;
-        public static final int main=0x7f030001;
+        public static final int listviewlayout=0x7f030000;
+        public static final int login=0x7f030001;
+        public static final int main=0x7f030002;
     }
     public static final class string {
         public static final int ApplicationName=0x7f040001;

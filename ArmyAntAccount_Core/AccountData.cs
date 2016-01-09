@@ -11,6 +11,19 @@ namespace ArmyAntAccount
 		public string person = "";
 		public string comment = "";
 		public string otherRemark = "";
+
+		public Dictionary<string, object> ToDic()
+		{
+			var ret = new Dictionary<string, object>();
+			ret.Add("datetime", datetime.ToString());
+			ret.Add("type", type);
+			ret.Add("change", change);
+			ret.Add("tag", tag);
+			ret.Add("person", person);
+			ret.Add("comment", comment);
+			ret.Add("otherRemark", otherRemark);
+			return ret;
+		}
 	}
 	public class AccountData
 	{
@@ -106,6 +119,17 @@ namespace ArmyAntAccount
 			data.RemoveAt(index);
 			return true;
 		}
+
+		public List<IDictionary<string, object>> ToDicList()
+		{
+			var ret = new List<IDictionary<string, object>>();
+			for(int i = 0; data != null && data.Count > i; i++)
+			{
+				ret.Add(data[i].ToDic());
+			}
+			return ret;
+		}
+
 		public AccountItem[] Data
 		{
 			get

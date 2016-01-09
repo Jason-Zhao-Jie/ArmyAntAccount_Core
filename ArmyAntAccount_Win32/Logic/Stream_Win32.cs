@@ -50,6 +50,7 @@ namespace ArmyAntAccount
 		{
 			if(file == null || !file.CanWrite)
 				return false;
+			file.SetLength(0);
 			var bts = Encoding.UTF8.GetBytes(text);
 			file.Write(bts, 0, bts.Length);
 			return true;

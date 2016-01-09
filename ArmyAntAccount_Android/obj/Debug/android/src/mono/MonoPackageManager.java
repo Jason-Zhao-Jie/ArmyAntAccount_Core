@@ -81,9 +81,9 @@ class MonoPackageManager_Resources {
 	public static final String[] Assemblies = new String[]{
 		"ArmyAntAccount_Android.dll",
 		"ArmyAntAccount_Core.dll",
+		"System.Collections.dll",
 		"System.Runtime.dll",
 		"System.Resources.ResourceManager.dll",
-		"System.Collections.dll",
 		"System.IO.dll",
 		"System.Xml.ReaderWriter.dll",
 		"System.Xml.XDocument.dll",

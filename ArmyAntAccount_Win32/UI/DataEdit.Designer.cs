@@ -124,6 +124,11 @@
 			// ioNum
 			// 
 			this.ioNum.Location = new System.Drawing.Point(147, 67);
+			this.ioNum.Maximum = new decimal(new int[] {
+            1078549667,
+            0,
+            0,
+            0});
 			this.ioNum.Name = "ioNum";
 			this.ioNum.Size = new System.Drawing.Size(125, 21);
 			this.ioNum.TabIndex = 8;
@@ -233,6 +238,7 @@
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "DataEdit";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "DataEdit";
 			this.Load += new System.EventHandler(this.DataEdit_Load);
 			((System.ComponentModel.ISupportInitialize)(this.ioNum)).EndInit();

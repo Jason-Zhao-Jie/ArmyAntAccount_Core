@@ -104,7 +104,7 @@ namespace ArmyAntAccount
 			return res;
 		}
 
-		public static Dictionary<string, object> ParseJson(string json)
+		private static Dictionary<string, object> ParseJson(string json)
 		{
 			return Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string,object>>(json);
 		}
@@ -116,7 +116,7 @@ namespace ArmyAntAccount
 			//解析Json字符串
 			var obj = ParseJson(files);
 			//记录列表
-			if(obj["code"].ToString() != "0")
+			if(Convert.ToInt32(obj["code"]) != 0)
 				throw new System.Web.HttpParseException("Get the folder list failed ! Message: " + obj["message"]);
 			var ret = new List<string>();
 			var data = ParseJson(obj["data"].ToString());

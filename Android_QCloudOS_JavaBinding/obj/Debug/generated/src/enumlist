@@ -1,5 +1,0 @@
-com.tencent.download.Downloader$Priority:Com.Tencent.Download:Downloader.Priority
-com.tencent.upload.Const$FileType:Com.Tencent.Upload:Const.FileType
-com.tencent.upload.Const$RetCode:Com.Tencent.Upload:Const.RetCode
-com.tencent.upload.Const$ServerEnv:Com.Tencent.Upload:Const.ServerEnv
-com.tencent.upload.impl.TaskManager$TaskType:Com.Tencent.Upload.Impl:TaskManager.TaskType

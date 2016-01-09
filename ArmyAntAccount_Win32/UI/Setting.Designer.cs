@@ -240,6 +240,7 @@
 			this.Controls.Add(this.okBtn);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Name = "Setting";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "首选项";
 			this.Load += new System.EventHandler(this.Setting_Load);
 			this.container.Panel1.ResumeLayout(false);

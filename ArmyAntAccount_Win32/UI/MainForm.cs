@@ -96,7 +96,9 @@ namespace ArmyAntAccount
 
 		private void save_menuItem_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show(this, Core.Save() ? "保存成功!" : "保存失败!", "保存");
+			if(Core.Save())
+				save_menuItem.Enabled = false;
+			MessageBox.Show(this, !save_menuItem.Enabled ? "保存成功!" : "保存失败!", "保存");
 		}
 
 		private void listview_KeyDown(object sender, KeyEventArgs e)
@@ -153,6 +155,7 @@ namespace ArmyAntAccount
 			if(MessageBox.Show(this, "确定删除此项数据?", "删除", MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
 				Core.Data.RemoveRecord(listview.SelectedIndices[0]);
+				listview.Items.Remove(listview.Items[listview.SelectedIndices[0]]);
 				save_menuItem.Enabled = true;
 			}
 		}

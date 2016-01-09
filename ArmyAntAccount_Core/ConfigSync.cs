@@ -133,7 +133,7 @@ namespace ArmyAntAccount
 				if(Core.Cloud.IsFileExist(file_main_data))
 				{
 					var cmp = new AccountData();
-					if(!Core.Cloud.Download(file_user_account, Core.File.GetPath(file_user_account)))
+					if(!Core.Cloud.Download(file_main_data, Core.File.GetPath(file_main_data)))
 						return false;
 					cmp.Mix(new AccountData());
 					cmp.Save();
