@@ -31,6 +31,9 @@
 			this.mainMenu = new System.Windows.Forms.MenuStrip();
 			this.file_menuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.save_menuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.sync_menuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.logout_menuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.exit_menuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.edit_menuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -45,6 +48,7 @@
 			this.statuBar = new System.Windows.Forms.StatusStrip();
 			this.statueTagLabel = new System.Windows.Forms.ToolStripStatusLabel();
 			this.statueLabel = new System.Windows.Forms.ToolStripStatusLabel();
+			this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
 			this.listview = new System.Windows.Forms.ListView();
 			this.date = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.time = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -54,14 +58,13 @@
 			this.tag = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.comment = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.otherRemark = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-			this.sync_menuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.exitBtn = new System.Windows.Forms.Button();
-			this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
 			this.changeBtn = new System.Windows.Forms.Button();
 			this.addBtn = new System.Windows.Forms.Button();
 			this.delBtn = new System.Windows.Forms.Button();
+			this.LookBtn = new System.Windows.Forms.Button();
+			this.nowCashTitle = new System.Windows.Forms.Label();
+			this.nowCash = new System.Windows.Forms.Label();
 			this.mainMenu.SuspendLayout();
 			this.statuBar.SuspendLayout();
 			this.SuspendLayout();
@@ -100,21 +103,38 @@
 			// 
 			this.save_menuItem.Enabled = false;
 			this.save_menuItem.Name = "save_menuItem";
-			this.save_menuItem.Size = new System.Drawing.Size(152, 22);
+			this.save_menuItem.Size = new System.Drawing.Size(124, 22);
 			this.save_menuItem.Text = "保存更改";
 			this.save_menuItem.Click += new System.EventHandler(this.save_menuItem_Click);
+			// 
+			// toolStripSeparator1
+			// 
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(121, 6);
+			// 
+			// sync_menuItem
+			// 
+			this.sync_menuItem.Name = "sync_menuItem";
+			this.sync_menuItem.Size = new System.Drawing.Size(124, 22);
+			this.sync_menuItem.Text = "同步";
+			this.sync_menuItem.Click += new System.EventHandler(this.sync_menuItem_Click);
+			// 
+			// toolStripSeparator2
+			// 
+			this.toolStripSeparator2.Name = "toolStripSeparator2";
+			this.toolStripSeparator2.Size = new System.Drawing.Size(121, 6);
 			// 
 			// logout_menuItem
 			// 
 			this.logout_menuItem.Name = "logout_menuItem";
-			this.logout_menuItem.Size = new System.Drawing.Size(152, 22);
+			this.logout_menuItem.Size = new System.Drawing.Size(124, 22);
 			this.logout_menuItem.Text = "注销";
 			this.logout_menuItem.Click += new System.EventHandler(this.logout_menuItem_Click);
 			// 
 			// exit_menuItem
 			// 
 			this.exit_menuItem.Name = "exit_menuItem";
-			this.exit_menuItem.Size = new System.Drawing.Size(152, 22);
+			this.exit_menuItem.Size = new System.Drawing.Size(124, 22);
 			this.exit_menuItem.Text = "退出";
 			this.exit_menuItem.Click += new System.EventHandler(this.exit_menuItem_Click);
 			// 
@@ -129,7 +149,7 @@
 			// add_menuItem
 			// 
 			this.add_menuItem.Name = "add_menuItem";
-			this.add_menuItem.Size = new System.Drawing.Size(152, 22);
+			this.add_menuItem.Size = new System.Drawing.Size(124, 22);
 			this.add_menuItem.Text = "添加账目";
 			this.add_menuItem.Click += new System.EventHandler(this.add_menuItem_Click);
 			// 
@@ -196,7 +216,7 @@
             this.toolStripStatusLabel1});
 			this.statuBar.Location = new System.Drawing.Point(0, 447);
 			this.statuBar.Name = "statuBar";
-			this.statuBar.Size = new System.Drawing.Size(827, 22);
+			this.statuBar.Size = new System.Drawing.Size(848, 22);
 			this.statuBar.TabIndex = 1;
 			this.statuBar.Text = "statusStrip1";
 			// 
@@ -213,6 +233,12 @@
 			this.statueLabel.AutoSize = false;
 			this.statueLabel.Name = "statueLabel";
 			this.statueLabel.Size = new System.Drawing.Size(600, 17);
+			// 
+			// toolStripStatusLabel1
+			// 
+			this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+			this.toolStripStatusLabel1.Size = new System.Drawing.Size(131, 17);
+			this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
 			// 
 			// listview
 			// 
@@ -294,23 +320,6 @@
 			this.otherRemark.Text = "备注";
 			this.otherRemark.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			// 
-			// toolStripSeparator1
-			// 
-			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
-			// 
-			// toolStripSeparator2
-			// 
-			this.toolStripSeparator2.Name = "toolStripSeparator2";
-			this.toolStripSeparator2.Size = new System.Drawing.Size(149, 6);
-			// 
-			// sync_menuItem
-			// 
-			this.sync_menuItem.Name = "sync_menuItem";
-			this.sync_menuItem.Size = new System.Drawing.Size(152, 22);
-			this.sync_menuItem.Text = "同步";
-			this.sync_menuItem.Click += new System.EventHandler(this.sync_menuItem_Click);
-			// 
 			// exitBtn
 			// 
 			this.exitBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
@@ -321,12 +330,6 @@
 			this.exitBtn.Text = "退出(&Q)";
 			this.exitBtn.UseVisualStyleBackColor = true;
 			this.exitBtn.Click += new System.EventHandler(this.exit_menuItem_Click);
-			// 
-			// toolStripStatusLabel1
-			// 
-			this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-			this.toolStripStatusLabel1.Size = new System.Drawing.Size(131, 17);
-			this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
 			// 
 			// changeBtn
 			// 
@@ -361,12 +364,45 @@
 			this.delBtn.UseVisualStyleBackColor = true;
 			this.delBtn.Click += new System.EventHandler(this.delBtn_Click);
 			// 
+			// LookBtn
+			// 
+			this.LookBtn.Location = new System.Drawing.Point(466, 410);
+			this.LookBtn.Name = "LookBtn";
+			this.LookBtn.Size = new System.Drawing.Size(75, 23);
+			this.LookBtn.TabIndex = 7;
+			this.LookBtn.Text = "总览(&T)";
+			this.LookBtn.UseVisualStyleBackColor = true;
+			this.LookBtn.Click += new System.EventHandler(this.LookBtn_Click);
+			// 
+			// nowCashTitle
+			// 
+			this.nowCashTitle.AutoSize = true;
+			this.nowCashTitle.Location = new System.Drawing.Point(530, 63);
+			this.nowCashTitle.Name = "nowCashTitle";
+			this.nowCashTitle.Size = new System.Drawing.Size(59, 12);
+			this.nowCashTitle.TabIndex = 8;
+			this.nowCashTitle.Text = "当前资产:";
+			// 
+			// nowCash
+			// 
+			this.nowCash.AutoSize = true;
+			this.nowCash.Font = new System.Drawing.Font("隶书", 24F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.nowCash.ForeColor = System.Drawing.Color.Red;
+			this.nowCash.Location = new System.Drawing.Point(595, 42);
+			this.nowCash.Name = "nowCash";
+			this.nowCash.Size = new System.Drawing.Size(134, 33);
+			this.nowCash.TabIndex = 9;
+			this.nowCash.Text = "9999999";
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.exitBtn;
 			this.ClientSize = new System.Drawing.Size(748, 469);
+			this.Controls.Add(this.nowCash);
+			this.Controls.Add(this.nowCashTitle);
+			this.Controls.Add(this.LookBtn);
 			this.Controls.Add(this.delBtn);
 			this.Controls.Add(this.addBtn);
 			this.Controls.Add(this.changeBtn);
@@ -426,5 +462,8 @@
 		private System.Windows.Forms.Button changeBtn;
 		private System.Windows.Forms.Button addBtn;
 		private System.Windows.Forms.Button delBtn;
+		private System.Windows.Forms.Button LookBtn;
+		private System.Windows.Forms.Label nowCashTitle;
+		private System.Windows.Forms.Label nowCash;
 	}
 }

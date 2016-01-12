@@ -1,5 +1,1 @@
-<data>
-  <record datetime="2016/1/9 17:43:04" type="初始账目" change="100" tag="" person="赵杰" comment="初始记录" otherRemark="" />
-  <record datetime="2016/1/9 17:43:33" type="购买" change="-100" tag="电子" person="赵杰" comment="购买手机iPhone7" otherRemark="" />
-  <record datetime="2016/1/9 17:44:25" type="工资" change="100" tag="工资" person="赵杰" comment="12月份工资" otherRemark="" />
-</data>
+<data />

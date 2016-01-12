@@ -138,6 +138,67 @@ namespace ArmyAntAccount
 			}
 		}
 
+		public long Total
+		{
+			get
+			{
+				long ret = 0;
+				for(int i = 0; i < data.Count; i++)
+				{
+					ret += data[i].change;
+				}
+				return ret;
+			}
+		}
+
+		public long TotalPain
+		{
+			get
+			{
+				long ret = 0;
+				for(int i = 0; i < data.Count; i++)
+				{
+					if(data[i].change < 0)
+						ret -= data[i].change;
+				}
+				return ret;
+			}
+		}
+		public long TotalGain
+		{
+			get
+			{
+				long ret = 0;
+				for(int i = 0; i < data.Count; i++)
+				{
+					if(data[i].change > 0)
+						ret += data[i].change;
+				}
+				return ret;
+			}
+		}
+		public int TotalOneDay
+		{
+			get
+			{
+				if(data.Count == 0)
+					return 0;
+				System.DateTime first = data[0].datetime;
+				System.DateTime last = data[0].datetime;
+				for(int i = 1; i < data.Count; i++)
+				{
+					if(data[i].datetime < first)
+						first = data[i].datetime;
+					else if(data[i].datetime > last)
+						last = data[i].datetime;
+				}
+				long ret = System.Convert.ToInt64((first - last).TotalDays);
+				if(ret < 1)
+					ret = 1;
+				return System.Convert.ToInt32(Total / ret);
+			}
+		}
+
 		private AccountItem Find(System.DateTime time)
 		{
 			foreach(var i in data)

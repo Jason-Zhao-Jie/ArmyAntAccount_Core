@@ -53,11 +53,10 @@ namespace ArmyAntAccount
 				var loadingdlg = new AlertDialog.Builder(this).Create();
 				loadingdlg.SetCancelable(false);
 				loadingdlg.SetTitle("请稍后");
-				loadingdlg.SetMessage("正在同步账户信息");
+				loadingdlg.SetMessage("正在同步数据");
 				loadingdlg.Show();
 				new Java.Lang.Thread(() =>
 				{
-					Log("In thread");
 					Stream_Android.Path = ApplicationContext.FilesDir.Path + "/";
 					try
 					{
@@ -93,12 +92,10 @@ namespace ArmyAntAccount
 						});
 						return;
 					}
-					Log("Before update thread");
 					RunOnUiThread(() =>
 					{
 						loadingdlg.Dismiss();
 					});
-					Log("After update thread");
 				}).Start();
 			}
 		}

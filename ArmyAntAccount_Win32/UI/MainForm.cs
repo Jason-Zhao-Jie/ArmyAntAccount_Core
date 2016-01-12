@@ -25,6 +25,7 @@ namespace ArmyAntAccount
 		{
 			if(Program.userdata.access < Access.Manager)
 				usermanager_menuItem.Enabled = false;
+			FlushCash();
 			UpdateListView();
 			listview_SelectedIndexChanged(sender, e);
 		}
@@ -40,6 +41,7 @@ namespace ArmyAntAccount
 			listview.EndUpdate();
 			if(listview.Items.Count > 0)
 				listview.Items[0].EnsureVisible();
+			FlushCash();
 		}
 
 		private void AddData(AccountItem item)
@@ -136,6 +138,15 @@ namespace ArmyAntAccount
 
 		private void sync_menuItem_Click(object sender, EventArgs e)
 		{
+			if(save_menuItem.Enabled)
+				switch(MessageBox.Show(this, "是否先保存更改,然后同步?", "同步", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+				{
+					case DialogResult.No:
+						return;
+					case DialogResult.Yes:
+						Core.Save();
+						break;
+				}
 			MessageBox.Show(this, Core.Sync(Core.IOType.Data) ? "同步成功!" : "同步失败!", "保存");
 		}
 
@@ -157,6 +168,7 @@ namespace ArmyAntAccount
 				Core.Data.RemoveRecord(listview.SelectedIndices[0]);
 				listview.Items.Remove(listview.Items[listview.SelectedIndices[0]]);
 				save_menuItem.Enabled = true;
+				FlushCash();
 			}
 		}
 
@@ -165,6 +177,16 @@ namespace ArmyAntAccount
 			var enable = listview.SelectedIndices.Count > 0;
 			changeBtn.Enabled = enable;
 			delBtn.Enabled = enable;
+		}
+
+		private void LookBtn_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "当前资产: " + Core.Data.Total + "\n总收入: " + Core.Data.TotalGain + "\n总支出: " + Core.Data.TotalPain + "\n日均净收入: " + Core.Data.TotalOneDay, "资产总览");
+		}
+
+		private void FlushCash()
+		{
+			nowCash.Text = Core.Data.Total.ToString();
 		}
 	}
 }

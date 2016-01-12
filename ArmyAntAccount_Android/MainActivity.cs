@@ -16,21 +16,19 @@ namespace ArmyAntAccount
 	[Activity(Label = "账务管理系统")]
 	public class MainActivity : Activity
 	{
-		private bool isItemClicking = false;
-		private PopupMenu menu = null;
-		private PopupWindow window = null;
-		protected ListView lv;
+		public ListView lv;
+		public static MainActivity This = null;
+		public static JavaList<IDictionary<string, object>> ret = new JavaList<IDictionary<string, object>>();
 		public delegate JavaDictionary<string, Java.Lang.Object> AddingFunc(AccountItem i);
 		protected override void OnCreate(Bundle bundle)
 		{
 			base.OnCreate(bundle);
-
+			This = this;
 			// Set our view from the "main" layout resource
 			SetContentView(Resource.Layout.Main);
 
 			// 绘制列表,添加原始数据
 			lv = FindViewById<ListView>(Resource.Id.lv);
-			var ret = new JavaList<IDictionary<string, object>>();
 			AddingFunc adding = (AccountItem i) =>
 			{
 				var retv = new JavaDictionary<string, Java.Lang.Object>();
@@ -51,37 +49,79 @@ namespace ArmyAntAccount
 			lv.Adapter = adapter;
 
 			//加入点击时的响应
-			menu = new PopupMenu(this);
-			window = new PopupWindow(this,);
-			lv.LongClick += Lv_LongClick;
-			lv.ItemClick += Lv_ItemClick;
-			lv.ItemLongClick += Lv_ItemLongClick;
+			lv.OnItemClickListener = adapter;
+			lv.OnItemLongClickListener = adapter;
 		}
 
-		private void Lv_LongClick(object sender, View.LongClickEventArgs e)
+		public void SaveAndExit(bool isJustLogOut)
 		{
-			if(isItemClicking)
-				return;
-
+			var loadingdlg = new AlertDialog.Builder(this).Create();
+			loadingdlg.SetCancelable(false);
+			loadingdlg.SetTitle("请稍后");
+			loadingdlg.SetMessage("正在保存修改");
+			loadingdlg.Show();
+			new Thread(() =>
+			{
+				Stream_Android.Path = ApplicationContext.FilesDir.Path + "/";
+				if(!Core.Save(Core.IOType.Data))
+				{
+					RunOnUiThread(() =>
+					{
+						loadingdlg.Dismiss();
+						loadingdlg = new AlertDialog.Builder(this).Create();
+						loadingdlg.SetTitle("数据错误");
+						loadingdlg.SetMessage("保存数据失败");
+						loadingdlg.SetButton("OK", (object ss, DialogClickEventArgs ev) =>
+						{
+							Finish();
+						});
+					});
+					return;
+				}
+				if(!Core.Sync(Core.IOType.Data))
+				{
+					RunOnUiThread(() =>
+					{
+						loadingdlg.Dismiss();
+						loadingdlg = new AlertDialog.Builder(this).Create();
+						loadingdlg.SetTitle("网络错误");
+						loadingdlg.SetMessage("同步数据失败");
+						loadingdlg.SetButton("OK", (object ss, DialogClickEventArgs ev) =>
+						{
+							Finish();
+						});
+					});
+					return;
+				}
+				RunOnUiThread(() =>
+				{
+					loadingdlg.Dismiss();
+					if(isJustLogOut)
+					{
+						GotoLogin();
+					}
+					Finish();
+				});
+			}).Start();
 		}
-		private void Lv_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
+		public void GotoLogin()
 		{
-			isItemClicking = true;
-
-			isItemClicking = false;
-		}
-		private void Lv_ItemLongClick(object sender, AdapterView.ItemLongClickEventArgs e)
-		{
-			isItemClicking = true;
-
-			isItemClicking = false;
+			var intent = new Intent();
+			intent.SetClass(ApplicationContext, Type.GetType("ArmyAntAccount.LoginActivity"));
+			StartActivity(intent);
+			Finish();
 		}
 	}
-
-	public class MySimpleAdapter : SimpleAdapter
+	public class MySimpleAdapter : SimpleAdapter, View.IOnTouchListener, AdapterView.IOnItemClickListener, AdapterView.IOnItemLongClickListener
 	{
+		private PopupMenu menu = null;
+		private PopupWindow window = null;
+		private int selectedPos = 0;
+		private bool changed = false;
+		public delegate void VoidEventCall(object sender);
+
 		public MySimpleAdapter(Context context, JavaList<IDictionary<string, object>> data, int resource, string[] from, int[] to)
-			:base(context, data, resource, from, to)
+			: base(context, data, resource, from, to)
 		{
 		}
 
@@ -103,9 +143,110 @@ namespace ArmyAntAccount
 				view = base.GetView(position, convertView, parent);
 			}
 
-			int[] colors = { Android.Graphics.Color.White, Android.Graphics.Color.Rgb(219, 238, 244) };//RGB颜色 
-			view.SetBackgroundColor(new Android.Graphics.Color(colors[position % 2]));// 每隔item之间颜色不同 
-			return base.GetView(position, view, parent);
+			view.SetBackgroundColor(position % 2 == 0 ? Android.Graphics.Color.White : Android.Graphics.Color.Gray);// 每隔item之间颜色不同 
+			var ret = base.GetView(position, view, parent);
+			ret.SetOnTouchListener(this);
+			return ret;
+		}
+
+		public void OnItemClick(AdapterView parent, View view, int position, long id)
+		{
+			view.SetBackgroundColor(position % 2 == 0 ? Android.Graphics.Color.White : Android.Graphics.Color.Gray);
+			selectedPos = position;
+			window = new PopupWindow(MainActivity.This);
+
+			window.ShowAtLocation(parent, GravityFlags.Center, 0, 0);
+		}
+
+		public bool OnItemLongClick(AdapterView parent, View view, int position, long id)
+		{
+			menu = new PopupMenu(MainActivity.This, view);
+			selectedPos = position;
+			menu.Menu.Add("查看");
+			menu.Menu.Add("删除");
+			menu.Menu.Add("修改");
+			menu.Menu.Add("添加");
+			menu.Menu.Add("总览");
+			menu.Menu.Add("筛选");
+			menu.Menu.Add("注销");
+			menu.Menu.Add("退出");
+			menu.MenuItemClick += Menu_MenuItemClick;
+			menu.Show();
+			view.SetBackgroundColor(position % 2 == 0 ? Android.Graphics.Color.White : Android.Graphics.Color.Gray);
+			return false;
+		}
+		private void Menu_MenuItemClick(object sender, PopupMenu.MenuItemClickEventArgs e)
+		{
+			switch(e.Item.TitleFormatted.ToString())
+			{
+				case "查看":
+					LoginActivity.MessageBox(MainActivity.This, "查看", "功能暂不支持");
+					break;
+				case "删除":
+					QuestionBox(MainActivity.This, "删除账目", "确定删除此条记录?", delegate (object s)
+					{
+						Core.Data.RemoveRecord(selectedPos);
+						MainActivity.ret.Remove(GetItem(selectedPos));
+						changed = true;
+					});
+					break;
+				case "修改":
+					LoginActivity.MessageBox(MainActivity.This, "修改", "功能暂不支持");
+					break;
+				case "添加":
+					LoginActivity.MessageBox(MainActivity.This, "添加", "功能暂不支持");
+					break;
+				case "总览":
+					LoginActivity.MessageBox(MainActivity.This, "总览", "当前资产: " + Core.Data.Total + "\n总收入: " + Core.Data.TotalGain + "\n总支出: " + Core.Data.TotalPain + "\n日均净收入: " + Core.Data.TotalOneDay);
+					break;
+				case "筛选":
+					LoginActivity.MessageBox(MainActivity.This, "筛选", "功能暂不支持");
+					break;
+				case "注销":
+					QuestionBox(MainActivity.This, "注销", "确定注销用户?", delegate (object s)
+					{
+						if(changed)
+							MainActivity.This.SaveAndExit(true);
+						else
+							MainActivity.This.GotoLogin();
+					});
+					break;
+				case "退出":
+					QuestionBox(MainActivity.This, "退出", "确定退出账务管理系统?", delegate (object s)
+					{
+						if(changed)
+							MainActivity.This.SaveAndExit(false);
+						else
+							MainActivity.This.Finish();
+					});
+					break;
+			}
+		}
+
+
+		public bool OnTouch(View v, MotionEvent e)
+		{
+			switch(e.Action)
+			{
+				case MotionEventActions.Down:
+					v.SetBackgroundColor(Android.Graphics.Color.Yellow);
+					break;
+			}
+			return false;
+		}
+		public static void QuestionBox(Activity act, string title, string text, VoidEventCall okCall)
+		{
+			var ad = new AlertDialog.Builder(act).Create();
+			ad.SetTitle(title);
+			ad.SetMessage(text);
+			ad.SetButton("OK", (object sender, DialogClickEventArgs e) =>
+			{
+				okCall(ad);
+			});
+			ad.SetButton2("Cancel", (object sender, DialogClickEventArgs e) =>
+			{
+			});
+			ad.Show();
 		}
 	}
 }

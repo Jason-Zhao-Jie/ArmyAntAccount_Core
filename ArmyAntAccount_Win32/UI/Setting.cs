@@ -40,12 +40,14 @@ namespace ArmyAntAccount
 				MessageBox.Show(this, "数据保存失败!", "提交");
 			else if(!Core.Upload(Core.IOType.Data))
 				MessageBox.Show(this, "数据同步失败!", "提交");
+			MessageBox.Show(this, "数据同步成功!", "提交");
 		}
 
 		private void updateBtn_Click(object sender, EventArgs e)
 		{
 			if(!Core.Download(Core.IOType.Data))
-				MessageBox.Show(this, "数据下载失败!", "提交");
+				MessageBox.Show(this, "数据下载失败!", "更新");
+			MessageBox.Show(this, "数据下载成功!", "更新");
 		}
 
 		private void okBtn_Click(object sender, EventArgs e)
